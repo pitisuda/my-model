@@ -57,7 +57,8 @@ webgazer.showVideoPreview(false).showPredictionPoints(false)
 function getNewImage(next = false) {
   var numbers = Math.floor(Math.random() * 4)+1;
   const img = document.createElement("img")
-  img.src = "http://pitisuda.com/wp-content/uploads/2021/01/m3-" + numbers + ".jpg"
+  //img.src = "http://pitisuda.com/wp-content/uploads/2021/01/m3-" + numbers + ".jpg"
+  img.src = "Img/m3-" + numbers + ".jpg"
   if (next) img.classList.add("next")
   document.body.append(img)  
   return img
