@@ -3,14 +3,18 @@ window.saveDataAcrossSessions = true
 const LOOK_DELAY = 1000 // 1 second
 const LEFT_CUTOFF = window.innerWidth / 4
 const RIGHT_CUTOFF = window.innerWidth - window.innerWidth / 4
+var imgNum = 0
+var currentImgNum = imgNum
+var minImg = 1
+var maxImg = 4
+var currentDirection = null
 
 let startLookTime = Number.POSITIVE_INFINITY
 let lookDirection = null
 let imageElement = getNewImage()
-let nextImageElement = getNewImage(true)
+let nextImageElement = null
 
-webgazer
-  .setGazeListener((data, timestamp) => {
+webgazer.setGazeListener((data, timestamp) => {
     if (data == null || lookDirection === "STOP") return
 
     if (
@@ -33,32 +37,41 @@ webgazer
     }
 
     if (startLookTime + LOOK_DELAY < timestamp) {
-      if (lookDirection === "LEFT") {
-        imageElement.classList.add("left")
-      } else {
-        imageElement.classList.add("right")
-      }
+        if (lookDirection === "LEFT" && currentImgNum > minImg) {
+          imageElement.classList.add("right")
+        } else if (lookDirection === "RIGHT" && currentImgNum < maxImg) {
+          imageElement.classList.add("left")
+        }   
 
+      currentDirection = lookDirection
       startLookTime = Number.POSITIVE_INFINITY
       lookDirection = "STOP"
       setTimeout(() => {
         imageElement.remove()
-        nextImageElement.classList.remove("next")
-        imageElement = nextImageElement
-        nextImageElement = getNewImage(true)
+        imageElement = getNewImage()
         lookDirection = "RESET"
       }, 200)
     }
   })
   .begin()
-
+  
 webgazer.showVideoPreview(false).showPredictionPoints(false)
 
 function getNewImage(next = false) {
-  var numbers = Math.floor(Math.random() * 4)+1;
+  if (currentDirection == "RIGHT" && imgNum != maxImg)
+    imgNum++
+  else if (currentDirection == "LEFT" && imgNum != minImg)
+    imgNum--  
+      
+  if (imgNum == 0)
+    imgNum++
+
+  currentImgNum = imgNum
+  //alert(lookDirection)
   const img = document.createElement("img")
   //img.src = "http://pitisuda.com/wp-content/uploads/2021/01/m3-" + numbers + ".jpg"
-  img.src = "Img/m3-" + numbers + ".jpg"
+  img.src = "Img/m3-" + currentImgNum + ".jpg"
+  console.log("lookDirection: " + currentDirection + ", " + img.src);
   if (next) img.classList.add("next")
   document.body.append(img)  
   return img
