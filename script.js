@@ -69,7 +69,7 @@ function getNewImage(next = false) {
   currentImgNum = imgNum
   //alert(lookDirection)
   const img = document.createElement("img")
-  //img.src = "http://pitisuda.com/wp-content/uploads/2021/01/m3-" + numbers + ".jpg"
+  //img.src = "Img/m3-" + numbers + ".jpg"
   img.src = "Img/m3-" + currentImgNum + ".jpg"
   console.log("lookDirection: " + currentDirection + ", " + img.src);
   if (next) img.classList.add("next")
